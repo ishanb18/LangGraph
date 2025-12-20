@@ -22,6 +22,20 @@ def add_thread_id(thread_id):
 def load_messages(thread_id):
     return chatbot.get_state(config={'configurable':{'thread_id':thread_id}}).values.get('messages',[])
 
+def get_thread_preview(thread_id, max_len=40):
+    messages = chatbot.get_state(
+        config={'configurable': {'thread_id': thread_id}}
+    ).values.get('messages', [])
+
+    # Find first HumanMessage
+    for msg in messages:
+        if isinstance(msg, HumanMessage):
+            preview = msg.content.strip()
+            return preview[:max_len] + ("..." if len(preview) > max_len else "")
+
+    return "New Chat"
+
+
 
 # *************************************************Session Setup************************************************
 if 'message_history' not in st.session_state:
@@ -35,7 +49,7 @@ if 'chat_thread' not in st.session_state:
 
 add_thread_id(st.session_state['thread_id'])
 
-#************************************************8 SideBar UI***************************************************
+#************************************************ SideBar UI***************************************************
 
 st.sidebar.title('LangGraph ChatBot')
 
@@ -46,7 +60,9 @@ st.sidebar.header('My Conversation')
 
 for thread_id in st.session_state['chat_thread'][::-1]:
 
-    if st.sidebar.button(str(thread_id)):
+    preview_text = get_thread_preview(thread_id)
+
+    if st.sidebar.button(preview_text,key=str(thread_id)):
         st.session_state['thread_id']= thread_id
         messages = load_messages(thread_id)
         temp_message =[]
