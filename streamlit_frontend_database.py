@@ -91,7 +91,15 @@ if user_input:
         st.text(user_input)
 
 
-    CONFIG = {'configurable':{'thread_id':st.session_state['thread_id']}}
+    # CONFIG = {'configurable':{'thread_id':st.session_state['thread_id']}}
+
+    CONFIG = {
+        'configurable':{'thread_id':st.session_state['thread_id']},
+        'metadata':{
+            "thread_id":st.session_state["thread_id"]
+        },
+        'run_name':"chat_turn"
+        }
     with st.chat_message('assistant'):
         # for streaming we use stream instead of invoke and use .write_stram  to display in type write effectr in streamlit
 
