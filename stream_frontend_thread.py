@@ -19,7 +19,7 @@ def add_thread_id(thread_id):
     if thread_id not in st.session_state['chat_thread']:
         st.session_state['chat_thread'].append(thread_id)
 
-def load_messages(thread_id):
+def load_messages(thread_id):   
     return chatbot.get_state(config={'configurable':{'thread_id':thread_id}}).values.get('messages',[])
 
 def get_thread_preview(thread_id, max_len=40):
